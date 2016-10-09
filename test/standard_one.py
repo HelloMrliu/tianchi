@@ -113,15 +113,21 @@ def cal_percentage(divide_num, divider_num):
 
 
 def save_result_into_file(feature_save_file_path):
+    count = 0
     with codecs.open(feature_save_file_path, 'w', 'utf-8') as feature_save_file:
         feature_save_file.write('mid,use_coupon_percentage' + '\n')
         for mid in small_count_dict:
-            per = cal_percentage(small_count_dict[mid], all_count_dict[mid])
+            if mid not in all_count_dict:
+                per = 0.15
+                count += 1
+            else:
+                per = cal_percentage(small_count_dict[mid], all_count_dict[mid])
             feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
         for mid in all_count_dict:
             if mid not in small_count_dict:
                 per = 0.000
                 feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
+    print count
 
 
 time_lim = 3
