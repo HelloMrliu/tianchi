@@ -16,7 +16,7 @@ def get_column_info(source_file_path, column_name, need_action):
     source_data = pd.read_csv(source_file_path)
     column_id_list = source_data[column_name]
     cid_list = source_data['cid']
-    date_received_list = source_data['data_received']
+    date_received_list = source_data['date_received']
     date_list = source_data['date']
     if need_action == 0:
         return column_id_list, cid_list, date_received_list, date_list

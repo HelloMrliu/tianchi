@@ -16,7 +16,7 @@ def get_column_info(source_file_path, column_name, need_action):
     source_data = pd.read_csv(source_file_path)
     column_id_list = source_data[column_name]
     cid_list = source_data['cid']
-    date_received_list = source_data['data_received']
+    date_received_list = source_data['date_received']
     date_list = source_data['date']
     if need_action == 0:
         return column_id_list, cid_list, date_received_list, date_list
@@ -94,7 +94,7 @@ def count_bc_number_online(column_id_list, cid_list, date_received_list, date_li
 
 def cal_percentage(divide_num, divider_num):
     per = float(divide_num) / divider_num
-    '''
+
     if divider_num == 1:
         per *= 0.7
     elif divider_num == 2:
@@ -108,7 +108,7 @@ def cal_percentage(divide_num, divider_num):
         per = 0.15
     if divide_num == 0 and divider_num == 3:
         per = 0.1
-    '''
+
     return per
 
 
@@ -130,8 +130,8 @@ def save_result_into_file(feature_save_file_path):
     print count
 
 
-time_lim = 3
-column_name = 'mid'
+time_lim = 15
+column_name = 'uid'
 
 column_id_list, cid_list, date_received_list, date_list = get_column_info(offline_train_file_path, column_name, 0)
 count_bc_number_offline(column_id_list, cid_list, date_received_list, date_list, time_lim)
@@ -139,5 +139,5 @@ count_bc_number_offline(column_id_list, cid_list, date_received_list, date_list,
 column_id_list, cid_list, date_received_list, date_list, action_list = get_column_info(online_train_file_path, column_name, 1)
 count_bc_number_online(column_id_list, cid_list, date_received_list, date_list, action_list, time_lim, 2, 1)
 
-feature_save_file_path = '../feature_data/mid_get_then_use_coupon_percentage_' + str(time_lim) + '.csv'
+feature_save_file_path = '../feature_data/uid_get_then_use_coupon_percentage_' + str(time_lim) + '.csv'
 save_result_into_file(feature_save_file_path)
