@@ -17,7 +17,7 @@ param = {
     'silent': 1,
     'objective': 'binary:logistic',
     'eval_metric': 'auc',
-    'scale_pos_weight': 2,
+    'scale_pos_weight': 1.5,
     'subsample': 0.75,
     'colsample_bytree': 0.75,
     'alpha': 10,
