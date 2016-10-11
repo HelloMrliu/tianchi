@@ -7,28 +7,30 @@ import time
 from sklearn.cross_validation import train_test_split
 
 train_data_path = '../train_data/train_data.csv'
+val_data_path = '../train_data/val_data.csv'
 test_data_path = '../train_data/test_data.csv'
 save_file_path = '../result_data/result_'
 
 
 param = {
-    'max_depth': 5,
+    'max_depth': 3,
     'eta': 0.1,
     'silent': 1,
-    'objective': 'binary:logistic',
+    'objective': 'rank:pairwise',#binary:logistic
     'eval_metric': 'auc',
-    'scale_pos_weight': 1.5,
-    'subsample': 0.75,
-    'colsample_bytree': 0.75,
-    'alpha': 10,
-    'lambda': 10,
+    'scale_pos_weight': 5,
+    'subsample': 0.7,
+    'colsample_bytree': 0.7,
+    #'alpha': 10,
+    #'lambda': 10,
     'nthread': 5
 }
 
 data = pd.read_csv(train_data_path)
+val_data = pd.read_csv(val_data_path)
 test_data = pd.read_csv(test_data_path)
 
-train_data, val_data = train_test_split(data, test_size=0.15)
+train_data= data #, temp_data = train_test_split(data, test_size=0.05)
 
 train_uid = train_data['uid']
 train_mid = train_data['mid']
@@ -57,8 +59,24 @@ test_matrix = xgb.DMatrix(test_x)
 
 watchlist = [(train_matrix,'train'),(val_matrix,'val')]
 
+model = xgb.train(param, train_matrix, num_boost_round=800, evals=watchlist)
 
-model = xgb.train(param, train_matrix, num_boost_round=2000, evals=watchlist)
+'''
+predict_y = model.predict(val_matrix)
+right_val = 0
+count = 0
+for index in range(len(predict_y)):
+    if str(val_y[index]) == '1':
+        if float(predict_y[index]) > 0.6:
+            temp = '1'
+        else:
+            temp = '0'
+        if temp == str(val_y[index]):
+            right_val += 1
+        print str(predict_y[index]) + ', ' + str(val_y[index])
+        count += 1
+print right_val, count
+'''
 
 test_y = model.predict(test_matrix)
 
@@ -71,6 +89,5 @@ y_list = list(test_y)
 
 current_time = time.strftime('%Y%m%d%H%M%S')
 with codecs.open(save_file_path + str(current_time) + '.csv', 'w', 'utf-8') as save_file:
-    #save_file.write('User_id,Coupon_id,Date_received,Probability\n')
     for index in range(len(y_list)):
-        save_file.write(str(uid_list[index]) + ',' + str(cid_list[index]) + ',' + str(date_received_list[index]) + ',' + str("%.4f" % float(y_list[index])) + '\n')
+        save_file.write(str(uid_list[index]) + ',' + str(cid_list[index]) + ',' + str(date_received_list[index]) + ',' + str("%.6f" % float(y_list[index])) + '\n')
