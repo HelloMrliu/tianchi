@@ -45,16 +45,13 @@ result_list = list()
 title_list = list()
 for file_name in os.listdir(feature_data_dir_path):
     file_path = feature_data_dir_path + file_name
-    if 'mid_get' in file_name:
+
+    if 'mid' in file_name:
         temp_result_list = make_new_feaature_list(file_path, mid_list)
-    elif 'mid_use' in file_name:
-        temp_result_list = make_new_feaature_list(file_path, mid_list)
-    elif 'uid_get' in file_name:
-        temp_result_list = make_new_feaature_list(file_path, uid_list)
-    elif 'uid_use' in file_name:
+    elif 'uid' in file_name:
         temp_result_list = make_new_feaature_list(file_path, uid_list)
     else:
-        temp_result_list = make_new_feaature_list(file_path, uid_list)
+        continue
 
     title_list.append(file_name.split('.')[0])
     result_list.append(temp_result_list)

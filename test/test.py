@@ -40,8 +40,8 @@ offline_train_set = set(get_id_list(offline_train_file_path))
 offline_test_set = set(get_id_list(offline_test_file_path))
 
 print len(offline_test_set)
-print len(online_train_set)
-print len(offline_test_set & online_train_set)
+print len(offline_train_set)
+print len(offline_test_set & offline_train_set)
 
 
 '''
