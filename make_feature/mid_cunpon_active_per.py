@@ -63,7 +63,7 @@ def save_result_into_file(feature_save_file_path):
                 max_num = int(small_count_dict[mid])
         for mid in small_count_dict:
             per = float(small_count_dict[mid]) / max_num
-            feature_save_file.write(str(mid) + ',' + str("%.3f" % per) + '\n')
+            feature_save_file.write(str(mid) + ',' + str("%.5f" % per) + '\n')
 
 
 time_lim = 15

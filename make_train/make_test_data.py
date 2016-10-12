@@ -5,7 +5,7 @@ import codecs
 import os
 
 
-def make_new_feaature_list(file_path, std_id_list):
+def make_new_feaature_list(file_path, std_id_list, stname):
     id_value_dict = dict()
     result_list = list()
     with codecs.open(file_path, 'r', 'utf-8') as feature_data_file:
@@ -19,13 +19,19 @@ def make_new_feaature_list(file_path, std_id_list):
             value = str(feature_data_list[1])
             id_value_dict[std_id] = value
 
+    count = 0
+
     for index in range(len(std_id_list)):
         std_id = str(std_id_list[index])
         if std_id not in id_value_dict:
             value = '0.00'
+            count += 1
         else:
             value = id_value_dict[std_id]
         result_list.append(value)
+
+    print stname
+    print float(count) / len(std_id_list)
     return result_list
 
 feature_data_dir_path = '../feature_data/'
@@ -47,9 +53,9 @@ for file_name in os.listdir(feature_data_dir_path):
     file_path = feature_data_dir_path + file_name
 
     if 'mid' in file_name:
-        temp_result_list = make_new_feaature_list(file_path, mid_list)
+        temp_result_list = make_new_feaature_list(file_path, mid_list, file_name)
     elif 'uid' in file_name:
-        temp_result_list = make_new_feaature_list(file_path, uid_list)
+        temp_result_list = make_new_feaature_list(file_path, uid_list, file_name)
     else:
         continue
 

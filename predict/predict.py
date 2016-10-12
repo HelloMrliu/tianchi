@@ -13,16 +13,16 @@ save_file_path = '../result_data/result_'
 
 
 param = {
-    'max_depth': 3,
+    'max_depth': 5,
     'eta': 0.1,
     'silent': 1,
-    'objective': 'rank:pairwise',#binary:logistic
+    'objective': 'binary:logistic',#binary:logistic
     'eval_metric': 'auc',
     'scale_pos_weight': 5,
-    'subsample': 0.7,
-    'colsample_bytree': 0.7,
-    #'alpha': 10,
-    #'lambda': 10,
+    'subsample': 0.6,
+    'colsample_bytree': 0.6,
+    'alpha': 100,
+    'lambda': 100,
     'nthread': 5
 }
 
@@ -59,23 +59,14 @@ test_matrix = xgb.DMatrix(test_x)
 
 watchlist = [(train_matrix,'train'),(val_matrix,'val')]
 
-model = xgb.train(param, train_matrix, num_boost_round=800, evals=watchlist)
+model = xgb.train(param, train_matrix, num_boost_round=500, evals=watchlist)
 
 '''
-predict_y = model.predict(val_matrix)
-right_val = 0
-count = 0
-for index in range(len(predict_y)):
-    if str(val_y[index]) == '1':
-        if float(predict_y[index]) > 0.6:
-            temp = '1'
-        else:
-            temp = '0'
-        if temp == str(val_y[index]):
-            right_val += 1
-        print str(predict_y[index]) + ', ' + str(val_y[index])
-        count += 1
-print right_val, count
+
+model = xgb.XGBClassifier()
+model.fit(train_x, train_y)
+print model.feature_importances_
+
 '''
 
 test_y = model.predict(test_matrix)
@@ -85,7 +76,6 @@ mid_list = list(test_mid)
 cid_list = list(test_cid)
 date_received_list = list(test_date_received)
 y_list = list(test_y)
-
 
 current_time = time.strftime('%Y%m%d%H%M%S')
 with codecs.open(save_file_path + str(current_time) + '.csv', 'w', 'utf-8') as save_file:

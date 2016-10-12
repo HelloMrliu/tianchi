@@ -40,7 +40,7 @@ def count_bc_number_offline(column_id_list, cid_list, date_received_list, date_l
         cid = cid_list[index]
         date_received = date_received_list[index]
         date = date_list[index]
-        if cid != 'null':
+        if cid != 'null' and date == 'null':
             if column_id in small_count_dict:
                 small_count_dict[column_id] += 1
             else:

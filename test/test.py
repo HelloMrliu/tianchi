@@ -20,7 +20,7 @@ offline_test_file_path = '../../tianchi_data/source_data/offline_test.csv'
 
 def get_id_list(source_file_path):
     source_data = pd.read_csv(source_file_path)
-    uid_list = source_data['cid']
+    uid_list = source_data['uid']
     '''
     mid_list = source_data['mid']
     cid_list = source_data['cid']
@@ -41,10 +41,23 @@ offline_test_set = set(get_id_list(offline_test_file_path))
 
 print len(offline_test_set)
 print len(offline_train_set)
-print len(offline_test_set & offline_train_set)
+print len(offline_test_set & (offline_train_set | online_train_set))
 
 
 '''
+
+76309
+515379
+74417
+
+76309
+762858
+43155
+
+1559
+8376
+1556
+
 print len(online_train_set | offline_train_set)
 print len(online_train_set & offline_train_set)
 print len(offline_test_set & offline_train_set)
