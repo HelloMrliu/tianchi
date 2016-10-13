@@ -14,7 +14,7 @@ save_file_path = '../result_data/result_'
 
 param = {
     'max_depth': 5,
-    'eta': 0.1,
+    'eta': 0.08,
     'silent': 1,
     'objective': 'binary:logistic',#binary:logistic
     'eval_metric': 'auc',
@@ -59,9 +59,9 @@ test_matrix = xgb.DMatrix(test_x)
 
 watchlist = [(train_matrix,'train'),(val_matrix,'val')]
 
-model = xgb.train(param, train_matrix, num_boost_round=500, evals=watchlist)
+#model = xgb.train(param, train_matrix, num_boost_round=500, evals=watchlist)
 
-'''
+
 
 model = xgb.XGBClassifier()
 model.fit(train_x, train_y)
@@ -81,3 +81,4 @@ current_time = time.strftime('%Y%m%d%H%M%S')
 with codecs.open(save_file_path + str(current_time) + '.csv', 'w', 'utf-8') as save_file:
     for index in range(len(y_list)):
         save_file.write(str(uid_list[index]) + ',' + str(cid_list[index]) + ',' + str(date_received_list[index]) + ',' + str("%.6f" % float(y_list[index])) + '\n')
+'''

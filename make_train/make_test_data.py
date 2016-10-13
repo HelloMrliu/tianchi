@@ -24,7 +24,7 @@ def make_new_feaature_list(file_path, std_id_list, stname):
     for index in range(len(std_id_list)):
         std_id = str(std_id_list[index])
         if std_id not in id_value_dict:
-            value = '0.00'
+            value = '1.00'
             count += 1
         else:
             value = id_value_dict[std_id]
@@ -32,6 +32,36 @@ def make_new_feaature_list(file_path, std_id_list, stname):
 
     print stname
     print float(count) / len(std_id_list)
+    return result_list
+
+
+def make_new_combine_feature(file_path, uid_list, mid_list):
+    id_value_dict = dict()
+    result_list = list()
+    with codecs.open(file_path, 'r', 'utf-8') as feature_data_file:
+        for feature_data in feature_data_file:
+            feature_data_list = feature_data.strip('\n').split(',')
+            std_id = str(feature_data_list[0])
+            value_list = feature_data_list[1:]
+            temp_dict = dict()
+            for value in value_list:
+                mid = value.split(':')[0]
+                number = value.split(':')[1]
+                temp_dict[mid] = number
+            id_value_dict[std_id] = temp_dict
+
+    for index in range(len(uid_list)):
+        uid = str(uid_list[index])
+        if uid in id_value_dict:
+            temp_dict = id_value_dict[uid]
+            mid = str(mid_list)
+            if mid in temp_dict:
+                value = str(temp_dict[mid])
+            else:
+                value = '0'
+        else:
+            value = '0'
+        result_list.append(value)
     return result_list
 
 feature_data_dir_path = '../feature_data/'
@@ -57,7 +87,7 @@ for file_name in os.listdir(feature_data_dir_path):
     elif 'uid' in file_name:
         temp_result_list = make_new_feaature_list(file_path, uid_list, file_name)
     else:
-        continue
+        temp_result_list = make_new_combine_feature(file_path, uid_list, mid_list)
 
     title_list.append(file_name.split('.')[0])
     result_list.append(temp_result_list)

@@ -49,13 +49,9 @@ def count_bc_number_offline(column_id_list, cid_list, date_received_list, date_l
 
 def save_result_into_file(feature_save_file_path):
     with codecs.open(feature_save_file_path, 'w', 'utf-8') as feature_save_file:
-        feature_save_file.write('uid,use_coupon_percentage' + '\n')
-        max_num = 0
+        feature_save_file.write('uid,x1' + '\n')
         for mid in small_count_dict:
-            if max_num < int(small_count_dict[mid]):
-                max_num = int(small_count_dict[mid])
-        for mid in small_count_dict:
-            per = float(small_count_dict[mid]) / max_num
+            per = float(small_count_dict[mid])
             feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
 
 

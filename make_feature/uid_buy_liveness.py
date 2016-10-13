@@ -8,6 +8,7 @@ online_train_file_path = '../../tianchi_data/source_data/online_train.csv'
 offline_train_file_path = '../../tianchi_data/source_data/offline_train.csv'
 offline_test_file_path = '../../tianchi_data/source_data/offline_test.csv'
 
+test_set = set()
 small_count_dict = dict()
 all_count_dict = dict()
 
@@ -40,30 +41,58 @@ def count_bc_number_offline(column_id_list, cid_list, date_received_list, date_l
         cid = cid_list[index]
         date_received = date_received_list[index]
         date = date_list[index]
-        if date != 'null':
+        if date != 'null' and cid == 'null':
             if column_id in small_count_dict:
                 small_count_dict[column_id] += 1
             else:
                 small_count_dict[column_id] = 1
 
 
+def count_bc_number_online(column_id_list, cid_list, date_received_list, date_list, action_list, time_limit, action_number):
+    for index in range(len(column_id_list)):
+        column_id = column_id_list[index]
+        cid = cid_list[index]
+        date_received = date_received_list[index]
+        date = date_list[index]
+        action = action_list[index]
+        if action == action_number:
+            if date != 'null' and cid == 'null':
+                if column_id in all_count_dict:
+                    all_count_dict[column_id] += 1
+                else:
+                    all_count_dict[column_id] = 1
+        else:
+            pass
+
+
 def save_result_into_file(feature_save_file_path):
     with codecs.open(feature_save_file_path, 'w', 'utf-8') as feature_save_file:
-        feature_save_file.write('uid,use_coupon_percentage' + '\n')
-        max_num = 0
+        feature_save_file.write('uid,x1' + '\n')
         for mid in small_count_dict:
-            if max_num < int(small_count_dict[mid]):
-                max_num = int(small_count_dict[mid])
-        for mid in small_count_dict:
-            per = float(small_count_dict[mid]) / max_num
-            feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
+            if mid not in all_count_dict:
+                per = float(small_count_dict[mid])
+                feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
+            else:
+                pass
+        for mid in all_count_dict:
+            if mid in test_set:
+                per = float(all_count_dict[mid])
+                feature_save_file.write(str(mid) + ',' + str("%.2f" % per) + '\n')
 
 
 time_lim = 15
 column_name = 'uid'
 
+test_data = pd.read_csv(offline_test_file_path)
+test_uid_list = test_data['uid']
+for data in test_uid_list:
+    test_set.add(data)
+
 column_id_list, cid_list, date_received_list, date_list = get_column_info(offline_train_file_path, column_name, 0)
 count_bc_number_offline(column_id_list, cid_list, date_received_list, date_list, time_lim)
+
+column_id_list, cid_list, date_received_list, date_list, action_list = get_column_info(online_train_file_path, column_name, 1)
+count_bc_number_online(column_id_list, cid_list, date_received_list, date_list, action_list, time_lim, 1)
 
 
 feature_save_file_path = '../feature_data/uid_buy_liveness_' + str(time_lim) + '.csv'
